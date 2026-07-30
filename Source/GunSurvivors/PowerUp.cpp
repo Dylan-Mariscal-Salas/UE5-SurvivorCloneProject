@@ -23,6 +23,7 @@ void APowerUp::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &APowerUp::OverlapBegin);
 }
 
 
@@ -57,4 +58,25 @@ void APowerUp::ApplyPowerUp(ATopdownCharacter* Player)
 void APowerUp::ChoosePowerUp()
 {
 
+}
+
+void APowerUp::UpdateFlipbook(EPowerUpType Type)
+{
+	if(Type == EPowerUpType::MovementSpeed)
+	{
+		PowerUpFlipbookComponent->SetFlipbook(MovementSpeedFlipbookAsset);
+	}
+	else if(Type == EPowerUpType::AttackSpeed)
+	{
+		PowerUpFlipbookComponent->SetFlipbook(AttackSpeedFlipbookAsset);
+	}
+	else if (Type == EPowerUpType::Bomb)
+	{
+		PowerUpFlipbookComponent->SetFlipbook(BombFlipbookAsset);
+	}
+}
+
+void APowerUp::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	
 }

@@ -59,14 +59,14 @@ void AEnemy::Tick(float DeltaTime)
 		{
 			if (FlipbookScaleX < 0.0f)
 			{
-				EnemyFlipbook->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+				EnemyFlipbook->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 			}
 		}
 		else  // Player is on the left side of the enemy
 		{
 			if (FlipbookScaleX > 0.0f)
 			{
-				EnemyFlipbook->SetWorldScale3D(FVector(-1.0f, 1.0f, 1.0f));
+				EnemyFlipbook->SetWorldScale3D(FVector(-2.0f, 2.0f, 2.0f));
 			}
 		}
 	}
@@ -84,6 +84,7 @@ void AEnemy::Die() {
 	CanFollow = false;
 
 	EnemyFlipbook->SetFlipbook(EnemyDeadFlipbookAsset);
+	EnemyFlipbook->SetLooping(false);
 	EnemyFlipbook->SetTranslucentSortPriority(-5);
 
 	EnemyDiedDelegate.Broadcast();
@@ -105,13 +106,34 @@ void AEnemy::SpawnPowerUp()
 {
 
 	float Roll = FMath::FRandRange(0.0f, 100.0f);
+	UE_LOG(LogTemp, Warning, TEXT("PowerUP Function"));
 
-	if (Roll <= 80.0f)
+	
+
+	EPowerUpType Type;
+
+	if (Roll <= 1.0f)
 	{
-		APowerUp* PowerUp = GetWorld()->SpawnActor<APowerUp>(PowerUpToSpawn, GetActorLocation(), FRotator::ZeroRotator);
-		if (PowerUp)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("PowerUp spawned successfully"));
-		}
+		Type = EPowerUpType::Bomb;
+	}
+	else if (Roll <= 3.0f)
+	{
+		Type = EPowerUpType::AttackSpeed;
+	}
+	else if (Roll <= 5.0f)
+	{
+		Type = EPowerUpType::MovementSpeed;
+	}
+	else
+	{
+		return;
+	}
+
+	APowerUp* PowerUp = GetWorld()->SpawnActor<APowerUp>(PowerUpToSpawn, GetActorLocation()
+		, FRotator::ZeroRotator);
+
+	if (PowerUp)
+	{
+		PowerUp->UpdateFlipbook(Type);
 	}
 }

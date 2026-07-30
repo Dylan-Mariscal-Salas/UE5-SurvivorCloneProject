@@ -9,6 +9,10 @@ AGunSurvivorsGameMode1::AGunSurvivorsGameMode1()
 
 void AGunSurvivorsGameMode1::BeginPlay() {
 	Super::BeginPlay();
+	if (GEngine)
+	{
+		GEngine->SetMaxFPS(60.0f);
+	}
 	SetScore(0);
 }
 

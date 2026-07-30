@@ -157,14 +157,14 @@ void ATopdownCharacter::MoveTriggered(const FInputActionValue& Value)
 		{
 			if (FlipbookScale.X > 0.0f)
 			{
-				CharacterFlipbook->SetWorldScale3D(FVector(-1.0f, 1.0f, 1.0f));
+				CharacterFlipbook->SetWorldScale3D(FVector(-2.0f, 2.0f, 2.0f));
 			}
 		}
 		else if (MovementDirection.X > 0.0f)
 		{
 			if (FlipbookScale.X < 0.0f) 
 			{
-				CharacterFlipbook->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+				CharacterFlipbook->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 			}
 		}
 
