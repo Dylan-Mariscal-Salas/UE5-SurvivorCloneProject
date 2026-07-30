@@ -1,0 +1,65 @@
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "Engine/TimerHandle.h"
+#include "Enemy.h"
+#include "TopdownCharacter.h"
+#include "GunSurvivorsGameMode1.h"
+#include "EnemySpawner.generated.h"
+
+UCLASS()
+class GUNSURVIVORS_API AEnemySpawner : public AActor
+{
+	GENERATED_BODY()
+	
+public:	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AEnemy> EnemyActorToSpawn;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float SpawnTime = 1.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpawnPosition = 400.0f;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	int NumberOfEnemiesSpawned = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int DifficultySpawnInterval = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpawnTimeMinimumLimit = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DecreaseSpawnTimeByEveryInterval = 0.05f;
+
+	AGunSurvivorsGameMode1* MyGameMode;
+
+	ATopdownCharacter* Player;
+
+	FTimerHandle SpawnTimer;
+
+
+	AEnemySpawner();
+
+	
+	virtual void BeginPlay() override;	
+	
+	virtual void Tick(float DeltaTime) override;
+
+	void OnSpawnTimerTimeout();
+	void StartSpawning();
+	void StopSpawning();
+	void SpawnEnemy();
+
+	void SetupEnemy(AEnemy* Enemy);
+
+	UFUNCTION()
+	void OnEnemyDied();
+
+	UFUNCTION()
+	void OnPlayerDied();
+};
