@@ -112,15 +112,15 @@ void AEnemy::SpawnPowerUp()
 
 	EPowerUpType Type;
 
-	if (Roll <= 70.0f)
+	if (Roll <= 10.0f)
 	{
 		Type = EPowerUpType::Bomb;
 	}
-	else if (Roll <= 80.0f)
+	else if (Roll <= 30.0f)
 	{
 		Type = EPowerUpType::AttackSpeed;
 	}
-	else if (Roll <= 90.0f)
+	else if (Roll <= 50.0f)
 	{
 		Type = EPowerUpType::MovementSpeed;
 	}
@@ -135,5 +135,6 @@ void AEnemy::SpawnPowerUp()
 	if (PowerUp)
 	{
 		PowerUp->UpdateFlipbook(Type);
+		PowerUp->PowerUpType = Type;
 	}
 }

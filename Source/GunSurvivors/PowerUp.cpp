@@ -34,32 +34,6 @@ void APowerUp::Tick(float DeltaTime)
 
 }
 
-void APowerUp::KillAllEnemiesOnScreen()
-{
-	TArray<AActor*> EnemiesOnScreen;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), EnemiesOnScreen);
-
-	for (AActor* Actor : EnemiesOnScreen)
-	{
-		AEnemy* Enemy = Cast<AEnemy>(Actor);
-		if (Enemy && Enemy->IsAlive)
-		{
-			Enemy->CanFollow = false;
-			Enemy->Die();
-		}
-	}
-
-}
-
-void APowerUp::ApplyPowerUp(ATopdownCharacter* Player)
-{
-
-}
-
-void APowerUp::ChoosePowerUp()
-{
-
-}
 
 void APowerUp::UpdateFlipbook(EPowerUpType Type)
 {
@@ -79,10 +53,95 @@ void APowerUp::UpdateFlipbook(EPowerUpType Type)
 
 void APowerUp::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	ATopdownCharacter* Player = Cast<ATopdownCharacter>(OtherActor);
+
+	if (Player && Player->IsAlive)
+	{
+		if (PowerUpType == EPowerUpType::MovementSpeed)
+		{
+			IncreaseMovementSpeed(Player);
+		}
+		else if (PowerUpType == EPowerUpType::AttackSpeed)
+		{
+			IncreaseAttackSpeed(Player);
+		}
+		else if (PowerUpType == EPowerUpType::Bomb)
+		{
+			KillAllEnemiesOnScreen();
+		}
+	}
 	
 }
 
 void APowerUp::OnDestroyTimerTimeout()
 {
 	Destroy();
+}
+
+void APowerUp::IncreaseMovementSpeed(ATopdownCharacter* Player)
+{
+	
+	if (Player && Player->IsAlive)
+	{
+		PlayerRef = Player;
+		Player->MovementSpeed = MovementSpeedToAdd;
+		GetWorldTimerManager().SetTimer(MovementSpeedPowerUpTimer, this, &APowerUp::SetMovementSpeedBackToNormal, 0.1f, false, MovementSpeedPowerUpTime);
+	}
+	
+
+}
+
+void APowerUp::IncreaseAttackSpeed(ATopdownCharacter* Player)
+{
+	if (Player && Player->IsAlive)
+	{
+		PlayerRef = Player;
+		Player->ShootCooldownDuration = AttackSpeedToIncrease;
+		GetWorldTimerManager().SetTimer(AttackSpeedPowerUpTimer, this, &APowerUp::SetAttackSpeedBackToNormal, 0.1f, false, MovementSpeedPowerUpTime);
+	}
+}
+
+void APowerUp::SetMovementSpeedBackToNormal()
+{
+	if (PlayerRef && PlayerRef->IsAlive)
+	{
+		PlayerRef->MovementSpeed = 100.0f;
+	}
+}
+
+void APowerUp::SetAttackSpeedBackToNormal()
+{
+	if (PlayerRef && PlayerRef->IsAlive)
+	{
+		PlayerRef-> ShootCooldownDuration = 0.3f;
+	}
+}
+
+void APowerUp::KillAllEnemiesOnScreen()
+{
+	TArray<AActor*> EnemyActors;
+
+	UGameplayStatics::GetAllActorsOfClass(
+		GetWorld(),
+		AEnemy::StaticClass(),
+		EnemyActors);
+
+	for (AActor* Actor : EnemyActors)
+	{
+		AEnemy* Enemy = Cast<AEnemy>(Actor);
+
+		if (!Enemy)
+		{
+			continue;
+		}
+
+		if (!Enemy->IsAlive)
+		{
+			continue;
+		}
+
+		Enemy->CanFollow = false;
+		Enemy->Die();
+	}
+
 }
