@@ -106,21 +106,21 @@ void AEnemy::SpawnPowerUp()
 {
 
 	float Roll = FMath::FRandRange(0.0f, 100.0f);
-	UE_LOG(LogTemp, Warning, TEXT("PowerUP Function"));
+	
 
 	
 
 	EPowerUpType Type;
 
-	if (Roll <= 1.0f)
+	if (Roll <= 70.0f)
 	{
 		Type = EPowerUpType::Bomb;
 	}
-	else if (Roll <= 3.0f)
+	else if (Roll <= 80.0f)
 	{
 		Type = EPowerUpType::AttackSpeed;
 	}
-	else if (Roll <= 5.0f)
+	else if (Roll <= 90.0f)
 	{
 		Type = EPowerUpType::MovementSpeed;
 	}

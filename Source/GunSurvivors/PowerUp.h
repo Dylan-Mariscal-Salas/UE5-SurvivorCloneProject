@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "PaperFlipbookComponent.h"
 #include "Enemy.h"
+#include "Engine/TimerHandle.h"
 
 
 #include "PowerUp.generated.h"
@@ -53,7 +54,11 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AEnemy> EnemyActorToSpawn;
 	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DeleteTime = 5.0f;
+
+	FTimerHandle DeleteTimer;
+
 	APowerUp();
 
 
@@ -66,6 +71,7 @@ public:
 	void ApplyPowerUp(ATopdownCharacter* Player);
 	void KillAllEnemiesOnScreen();
 	void UpdateFlipbook(EPowerUpType Type);
+	void OnDestroyTimerTimeout();
 	
 
 	UFUNCTION()
